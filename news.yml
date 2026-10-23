@@ -1,0 +1,18 @@
+name: News
+on:
+  schedule:
+    - cron: "*/20 * * * *"
+  workflow_dispatch:
+permissions:
+  contents: write
+jobs:
+  news:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: python3 news.py
+      - run: |
+          git config user.name "news-bot"
+          git config user.email "bot@users.noreply.github.com"
+          git add news.json
+          git diff --cached --quiet || (git commit -m "News aktualisiert" && git push)
